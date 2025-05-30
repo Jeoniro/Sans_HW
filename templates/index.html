@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">경제 뉴스 링크 모음 ({{ today.strftime('%Y년 %m월 %d일') }})</h1>
+        
+        {% if news_data and news_data.news %}
+            <div class="alert alert-info mb-4">
+                <i class="bi bi-info-circle"></i> 
+                총 {{ news_data.total_count }}개의 뉴스 중 최신 {{ news_data.news|length }}개를 표시합니다.
+            </div>
+            
+            {% for news in news_data.news %}
+                <div class="card news-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary">{{ news.category }}</span>
+                            <small class="text-muted">
+                                {% if news.days_ago == 0 %}
+                                    오늘
+                                {% elif news.days_ago == 1 %}
+                                    어제
+                                {% else %}
+                                    {{ news.days_ago }}일 전
+                                {% endif %}
+                            </small>
+                        </div>
+                        
+                        <h5 class="card-title">
+                            <a href="{{ news.link }}" target="_blank" class="text-decoration-none">
+                                {{ news.title | safe }}
+                            </a>
+                        </h5>
+                        
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            출처: {{ news.source }}
+                            <small class="float-end">{{ news.published }}</small>
+                        </h6>
+                        
+                        {% if news.summary %}
+                            <p class="card-text text-muted small">{{ news.summary | safe }}</p>
+                        {% endif %}
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ news.link }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                <i class="bi bi-box-arrow-up-right"></i> 기사 읽기
+                            </a>
+                            <small class="text-muted">#{{ loop.index }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                아직 뉴스가 없습니다. "뉴스 업데이트" 버튼을 클릭하여 최신 뉴스를 가져오세요.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
